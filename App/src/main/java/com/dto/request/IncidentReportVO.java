@@ -10,10 +10,9 @@ import java.io.Serializable;
 public class IncidentReportVO implements Serializable {
 
     private Long id;
-    @NotNull
     private String title;
     @NotNull
     private ReportStatus status;
     private String assignee;
-    private String createdBy;
+
 }

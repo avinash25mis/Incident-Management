@@ -1,9 +1,6 @@
 package com.ExceptionHandling;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,23 +23,6 @@ import java.util.Map;
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler
 {
 
-    @ExceptionHandler(AppExceptions.class)
-    public final ResponseEntity<Object> appException(AppExceptions ex, WebRequest request) {
-        String errorMessage=ex.getErrorMsg();
-        String details=ex.getDetailMessage();
-        ex.printStackTrace();
-        ErrorResponse error = new ErrorResponse(errorMessage, details);
-        return new ResponseEntity(error, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-    @ExceptionHandler(HttpClientErrorException.class)
-    public final ResponseEntity<Object> accessDeniedException(AccessDeniedException ex, WebRequest request) {
-
-        ex.printStackTrace();
-        ErrorResponse error = new ErrorResponse(ex.getMessage(), ex.getLocalizedMessage());
-        return new ResponseEntity(error, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         Map<String, String> errors = new HashMap<>();
@@ -60,17 +40,25 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler
         return new ResponseEntity(response,HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(AppExceptions.class)
+    public final ResponseEntity<Object> appException(AppExceptions ex, WebRequest request) {
+        ex.printStackTrace();
+        ErrorResponse error = new ErrorResponse(ex.getErrorMsg(), ex.getDetailMessage());
+        return new ResponseEntity(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(HttpClientErrorException.class)
+    public final ResponseEntity<Object> accessDeniedException(AccessDeniedException ex, WebRequest request) {
+        ex.printStackTrace();
+        ErrorResponse error = new ErrorResponse(ex.getMessage(), ex.getLocalizedMessage());
+        return new ResponseEntity(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+
     @ExceptionHandler(Exception.class)
     public final ResponseEntity<Object> defaultHandler(Exception ex, WebRequest request) {
-        String errorMessage=ex.getLocalizedMessage();
-        String details = "";
-        if(ex.getCause()!=null && ex.getCause()!=null && ex.getCause().getCause()!=null) {
-            details=ex.getCause().getCause().toString();
-        }else{
-            details=ex.getLocalizedMessage();
-        }
         ex.printStackTrace();
-        ErrorResponse error = new ErrorResponse(errorMessage, details);
+        ErrorResponse error = new ErrorResponse(ex.getClass().getName(), ex.getLocalizedMessage());
         return new ResponseEntity(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 

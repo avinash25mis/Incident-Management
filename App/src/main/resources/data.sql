@@ -4,7 +4,7 @@ INSERT INTO app_user(id,username,password,first_name,last_name,enabled)values(50
 
 
 
-INSERT INTO incident_report(id,title,status,assigned_user_id,created_by)values(50001,'default Report','New',50001,'admin')
+INSERT INTO incident_report(id,title,status,assignee,created_by)values(50001,'default Report','New','admin','admin')
 
 
 

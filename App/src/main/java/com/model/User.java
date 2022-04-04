@@ -18,7 +18,9 @@ import java.util.List;
  * @author avinash.a.mishra
  */
 @Entity
-@Table(name="app_user")
+@Table(name="app_user",indexes = {
+        @Index(columnList = "username", name = "app_username_index")
+})
 @Data
 public class User extends BaseEntity {
 
@@ -28,6 +30,7 @@ public class User extends BaseEntity {
    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_id")
    private Long id;
    @NotNull
+   @Column(unique = true)
    private String username;
    private String password;
    @NotNull

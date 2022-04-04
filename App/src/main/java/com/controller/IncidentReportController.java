@@ -25,8 +25,22 @@ public class IncidentReportController {
     @Autowired
     private IncidentReportMapper mapper;
 
+    @GetMapping
+    public ResponseEntity<GenericResponse> getAllReport(){
+        List<IncidentReport> reportList = reportService.findAllIncidentReport();
+        List<IncidentReportVO> incidentReportVOS = mapper.toDtoList(reportList);
+        return ResponseEntity.ok(new GenericResponse(StatusConstants.ok,"Incident Report List",incidentReportVOS));
+    }
+
+    @GetMapping("/{irId}")
+    public ResponseEntity<GenericResponse> getTheReport(@PathVariable Long irId){
+        IncidentReport report = reportService.validateAndFindIncidentById(irId);
+        IncidentReportVO incidentReportVO = mapper.toDto(report);
+        return ResponseEntity.ok(new GenericResponse(StatusConstants.ok,"Incident Report",incidentReportVO));
+    }
+
     @PostMapping
-    public ResponseEntity<GenericResponse> saveReport(@Valid @RequestBody IncidentReportVO report, Principal principal) {
+    public ResponseEntity<GenericResponse> saveReport(@Valid @RequestBody IncidentReportVO report) {
         IncidentReport incidentReport = mapper.toEntity(report);
         IncidentReport savedReport= reportService.saveIncidentReport(incidentReport);
         return ResponseEntity.ok(new GenericResponse(StatusConstants.ok,"Incident Report saved",savedReport.getId()));
@@ -47,19 +61,9 @@ public class IncidentReportController {
         return ResponseEntity.ok(new GenericResponse(StatusConstants.ok,"Incident Report deleted",null));
     }
 
-    @GetMapping("/{irId}")
-    public ResponseEntity<GenericResponse> getTheReport(@PathVariable Long irId){
-        IncidentReport report = reportService.findIncidentById(irId);
-        IncidentReportVO incidentReportVO = mapper.toDto(report);
-        return ResponseEntity.ok(new GenericResponse(StatusConstants.ok,"Incident Report",incidentReportVO));
-    }
 
 
-    @GetMapping
-    public ResponseEntity<GenericResponse> getAllReport(){
-        List<IncidentReport> reportList = reportService.findAllIncidentReport();
-        List<IncidentReportVO> incidentReportVOS = mapper.toDtoList(reportList);
-        return ResponseEntity.ok(new GenericResponse(StatusConstants.ok,"Incident Report List",incidentReportVOS));
-    }
+
+
 
 }

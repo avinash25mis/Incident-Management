@@ -15,6 +15,7 @@ public interface IncidentReportMapper{
 
     IncidentReportVO toDto(IncidentReport incidentReport);
 
+    //@Mapping(target = "id", ignore = true)
     IncidentReport toEntity(IncidentReportVO incidentReportVO);
 
     List<IncidentReportVO> toDtoList(List<IncidentReport> incidentReports);

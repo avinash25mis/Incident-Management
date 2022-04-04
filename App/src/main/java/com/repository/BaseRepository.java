@@ -1,4 +1,4 @@
-package com.dao;
+package com.repository;
 
 
 import com.model.IncidentReport;
@@ -72,33 +72,15 @@ public class BaseRepository {
     public List  findAll(String className){
         Query query = em.createQuery("FROM "+className);
         List resultList = query.getResultList();
-        if(className.equals("IncidentReport")){
-            formatIncidentReport(resultList);
-        }
+
         return resultList;
 
     }
 
-    private void formatIncidentReport(List<IncidentReport> resultList) {
-       for(IncidentReport ir :resultList){
-           if(ir.getAssignedUser()!=null){
-               ir.setAssignee(ir.getAssignedUser().getUsername());
-           }
-       }
-    }
 
 
-    public User getUserByUserName(String username){
-        List<User> list= new ArrayList<>();
-        User user=null;
-        Query query = em.createQuery("from User u where u.username=:username");
-        query.setParameter("username",username);
-        list=query.getResultList();
-        if(CollectionUtils.isNotEmpty(list)){
-            user=list.get(0);
-        }
-        return user;
-    }
+
+
 
 
 }

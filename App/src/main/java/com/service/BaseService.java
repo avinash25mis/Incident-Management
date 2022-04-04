@@ -13,19 +13,7 @@ import java.util.List;
 @Service
 public class BaseService {
 
-     void validateId(Long id) {
-        if(id==null){
-            throw new AppExceptions("id null", "Id cannot be null");
-        }
 
-    }
-
-
-     void validateObject(Object o, String objName, Long id) {
-        if (o==null) {
-            throw new AppExceptions(objName+" not found", id.toString());
-        }
-    }
 
 
     public String getLoggedInUser() {
@@ -36,6 +24,9 @@ public class BaseService {
                 userName = authentication.getName();
 
             }
+        }
+        if(userName==null){
+            throw new AppExceptions("Not logged In","Logged in user cannot be null");
         }
         return userName;
     }

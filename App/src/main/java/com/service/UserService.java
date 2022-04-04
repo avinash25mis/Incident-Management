@@ -1,8 +1,12 @@
 package com.service;
 
 
-import com.dao.BaseRepository;
+import com.ExceptionHandling.AppExceptions;
+import com.model.IncidentReport;
+import com.repository.BaseRepository;
 import com.model.User;
+import com.repository.UserRepository;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,30 +17,23 @@ public class UserService extends BaseService{
 
     @Autowired
     protected BaseRepository repository;
+    @Autowired
+    protected UserRepository userRepository;
 
     public User saveUpdateUser(User user) {
         User savedUser = repository.saveOrUpdate(user);
         return savedUser;
     }
 
-    public User findUserByUserId(Long id) {
-        validateId(id);
-        User user = repository.findById(User.class, id);
-        validateObject(user, "user",id);
-        return user;
-    }
+
 
     public void updateUser(User newUser) {
-        validateId(newUser.getId());
-        User oldUser = repository.findById(User.class, newUser.getId());
-        validateObject(oldUser, "incidentReport",newUser.getId());
+        User oldUser = validateAndGetUser(newUser.getUsername());
         compareAndUpdate(newUser,oldUser);
     }
 
     public void deleteUser(Long id) {
-        validateId(id);
-        User user = repository.findById(User.class, id);
-        validateObject(user, User.class.getName(),id);
+        User user = validateAndFindUserById(id);
         repository.delete(user);
 
     }
@@ -62,6 +59,35 @@ public class UserService extends BaseService{
             oldUser.setLastName(newUSer.getLastName());
         }
         repository.saveOrUpdate(oldUser);
+    }
+
+
+    public User validateAndGetUser(String username) {
+        User user = userRepository.getUserByUsername(username);
+        if(user==null){
+            throw new AppExceptions("User Non found","with username :-"+username);
+        }
+        return user;
+    }
+
+    public boolean compareUsers(String username) {
+        if(StringUtils.isNotEmpty(username) && getLoggedInUser().equals(username)) {
+           return true;
+        }else{
+            return false;
+        }
+    }
+
+
+    public User validateAndFindUserById(Long id) {
+        User user=null;
+        if(id!=null) {
+            user = repository.findById(User.class, id);
+        }
+        if (user==null) {
+            throw new AppExceptions("User Not found "+id);
+        }
+        return user;
     }
 
 

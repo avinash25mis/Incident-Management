@@ -15,11 +15,11 @@ import java.util.List;
 public class IncidentReportService extends BaseService{
 
     @Autowired
-    protected IrRepository irRepository;
+    private IrRepository irRepository;
     @Autowired
-    protected BaseRepository repository;
+    private BaseRepository repository;
     @Autowired
-    protected UserService userService;
+    private UserService userService;
 
     public IncidentReport saveIncidentReport(IncidentReport report) {
         validateUsersAndUpdate(report);
@@ -38,18 +38,22 @@ public class IncidentReportService extends BaseService{
     public void updateIncidentReport(IncidentReport newIR) {
         IncidentReport oldIR=null;
         if(newIR.getId()!=null){
-            oldIR = validateAndFindIncidentById(newIR.getId());
+            oldIR = validateAndGetReportById(newIR.getId());
         }else if(StringUtils.isNotEmpty(newIR.getTitle())){
-            oldIR = validateAndGetReport(newIR.getTitle());
+            oldIR = validateAndGetReportByTitle(newIR.getTitle());
         }else{
             throw new AppExceptions("Need either id or title to update Incident Report");
         }
 
         compareAndUpdate(newIR,oldIR);
+        repository.saveOrUpdate(oldIR);
     }
 
-    private IncidentReport validateAndGetReport(String title) {
-        IncidentReport incidentReportByTitle = irRepository.getIncidentReportByTitle(title);
+    public IncidentReport validateAndGetReportByTitle(String title) {
+        IncidentReport incidentReportByTitle = null;
+        if(StringUtils.isNotEmpty(title)) {
+            incidentReportByTitle=irRepository.getIncidentReportByTitle(title);
+        }
         if(incidentReportByTitle==null){
             throw new AppExceptions("IncidentReport Non found","with tile :-"+title);
         }
@@ -58,12 +62,12 @@ public class IncidentReportService extends BaseService{
 
 
     public void deleteReport(Long id) {
-        IncidentReport incidentReport = validateAndFindIncidentById(id);
+        IncidentReport incidentReport = validateAndGetReportById(id);
         repository.delete(incidentReport);
 
     }
 
-    public IncidentReport validateAndFindIncidentById(Long id) {
+    public IncidentReport validateAndGetReportById(Long id) {
         IncidentReport incidentReport=null;
         if(id!=null) {
             incidentReport = repository.findById(IncidentReport.class, id);
@@ -82,8 +86,8 @@ public class IncidentReportService extends BaseService{
 
 
     private void compareAndUpdate(IncidentReport newIR, IncidentReport oldIR) {
-       boolean assignee= userService.compareUsers(oldIR.getAssignee());
-       boolean creator=userService.compareUsers(oldIR.getCreatedBy());
+       boolean assignee= userService.compareWithLoggedInUser(oldIR.getAssignee());
+       boolean creator=userService.compareWithLoggedInUser(oldIR.getCreatedBy());
        if(!creator && !assignee){
            throw new AppExceptions("Cannot update", "Only assignee/creator can update the Report");
        }
@@ -96,6 +100,6 @@ public class IncidentReportService extends BaseService{
         if(StringUtils.isNotEmpty(newIR.getTitle())){
             oldIR.setTitle(newIR.getTitle());
         }
-        repository.saveOrUpdate(oldIR);
+
     }
 }

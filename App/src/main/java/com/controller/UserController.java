@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.security.Principal;
 import java.util.List;
 
 /**
@@ -46,7 +45,7 @@ public class UserController {
    @PostMapping
    public ResponseEntity<GenericResponse> registerUser(@Valid @RequestBody UserVO userVO) {
       User user = mapper.toEntity(userVO);
-      User savedUser=userService.saveUpdateUser(user);
+      User savedUser=userService.saveUser(user);
       return ResponseEntity.ok(new GenericResponse(StatusConstants.ok,"user saved",savedUser.getId()));
   }
 

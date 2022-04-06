@@ -16,11 +16,11 @@ import java.util.List;
 public class UserService extends BaseService{
 
     @Autowired
-    protected BaseRepository repository;
+    private BaseRepository repository;
     @Autowired
-    protected UserRepository userRepository;
+    private UserRepository userRepository;
 
-    public User saveUpdateUser(User user) {
+    public User saveUser(User user) {
         User savedUser = repository.saveOrUpdate(user);
         return savedUser;
     }
@@ -30,6 +30,7 @@ public class UserService extends BaseService{
     public void updateUser(User newUser) {
         User oldUser = validateAndGetUser(newUser.getUsername());
         compareAndUpdate(newUser,oldUser);
+        repository.saveOrUpdate(oldUser);
     }
 
     public void deleteUser(Long id) {
@@ -58,19 +59,19 @@ public class UserService extends BaseService{
         if(newUSer.getLastName()!=null){
             oldUser.setLastName(newUSer.getLastName());
         }
-        repository.saveOrUpdate(oldUser);
+
     }
 
 
     public User validateAndGetUser(String username) {
         User user = userRepository.getUserByUsername(username);
         if(user==null){
-            throw new AppExceptions("User Non found","with username :-"+username);
+           throw new AppExceptions("User Not found","with username :-"+username);
         }
         return user;
     }
 
-    public boolean compareUsers(String username) {
+    public boolean compareWithLoggedInUser(String username) {
         if(StringUtils.isNotEmpty(username) && getLoggedInUser().equals(username)) {
            return true;
         }else{

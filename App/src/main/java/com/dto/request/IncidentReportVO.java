@@ -11,7 +11,6 @@ public class IncidentReportVO implements Serializable {
 
     private Long id;
     private String title;
-    @NotNull
     private ReportStatus status;
     private String assignee;
 

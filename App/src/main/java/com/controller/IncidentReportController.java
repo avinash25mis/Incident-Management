@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -34,7 +33,7 @@ public class IncidentReportController {
 
     @GetMapping("/{irId}")
     public ResponseEntity<GenericResponse> getTheReport(@PathVariable Long irId){
-        IncidentReport report = reportService.validateAndFindIncidentById(irId);
+        IncidentReport report = reportService.validateAndGetReportById(irId);
         IncidentReportVO incidentReportVO = mapper.toDto(report);
         return ResponseEntity.ok(new GenericResponse(StatusConstants.ok,"Incident Report",incidentReportVO));
     }

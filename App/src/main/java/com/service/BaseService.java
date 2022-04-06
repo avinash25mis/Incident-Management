@@ -25,9 +25,7 @@ public class BaseService {
 
             }
         }
-        if(userName==null){
-            throw new AppExceptions("Not logged In","Logged in user cannot be null");
-        }
+
         return userName;
     }
 

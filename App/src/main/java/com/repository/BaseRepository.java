@@ -77,6 +77,18 @@ public class BaseRepository {
 
     }
 
+    public User getUserByUserName(String username){
+        List<User> list= new ArrayList<>();
+        User user=null;
+        Query query = em.createQuery("from User u where u.username=:username");
+        query.setParameter("username",username);
+        list=query.getResultList();
+        if(CollectionUtils.isNotEmpty(list)){
+            user=list.get(0);
+        }
+        return user;
+    }
+
 
 
 

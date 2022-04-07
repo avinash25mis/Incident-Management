@@ -63,8 +63,8 @@ after token is added we can maintain a session from the swagger UI
 also Avalilable at swagger UI (http://localhost:8082/app/swagger-ui.html#/)
 
    #### by default the application has 2 users
-   username : admoin   password : admin
-   username : default  password : default
+   username : "admin"   password : "admin"
+   username : "default"  password : "default"
 
 POST
 localhost:8082/app/authenticate

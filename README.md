@@ -58,10 +58,13 @@ after token is added we can maintain a session from the swagger UI
 
 # APIs
 
-#### 1. To authenticate 
+#### 1. To authenticate (to get the required token)
 
 also Avalilable at swagger UI (http://localhost:8082/app/swagger-ui.html#/)
 
+   #### by default the application has 2 users
+   username : admoin   password : admin
+   username : default  password : default
 
 POST
 localhost:8082/app/authenticate
@@ -76,9 +79,10 @@ localhost:8082/app/authenticate
  --------------------------------------------------------------------
  
  
- #### 2   get All Incident Report
+ #### 2   get All Incident Report 
    
    Available at swagger ui URL (http://localhost:8082/app/swagger-ui.html#/)
+   
  
   
    GET Request after addition the token in the header with key "Authorization"

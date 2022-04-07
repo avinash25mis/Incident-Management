@@ -17,13 +17,13 @@ import java.time.LocalDateTime;
 public abstract class BaseEntity implements GenericEntity {
 
     @Column(name = "UPDATED_DATE")
-    private LocalDateTime updatedDate;
+    protected LocalDateTime updatedDate;
     @Column(name = "CREATED_DATE")
-    private LocalDateTime createdDate;
+    protected LocalDateTime createdDate;
     @Column(name = "CREATED_BY")
-    private String createdBy;
+    protected String createdBy;
     @Column(name = "UPDATED_BY")
-    private String updatedBy;
+    protected String updatedBy;
 
 
 

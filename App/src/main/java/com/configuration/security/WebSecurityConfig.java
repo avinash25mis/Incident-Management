@@ -42,6 +42,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/h2-database/**",
             "/authenticate",
             "/health",
+            "/User**",
             "/"
     };
 

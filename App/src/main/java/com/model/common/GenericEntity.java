@@ -7,8 +7,8 @@ import java.io.Serializable;
  */
 public interface GenericEntity extends Serializable {
 
-    public Long getId();
+     Long getId();
 
-    public void setId(Long id) ;
+     void setId(Long id) ;
 
 }

@@ -13,5 +13,6 @@ public class IncidentReportVO implements Serializable {
     private String title;
     private ReportStatus status;
     private String assignee;
+    private String createdBy;
 
 }

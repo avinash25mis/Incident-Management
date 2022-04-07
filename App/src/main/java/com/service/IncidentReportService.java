@@ -2,6 +2,7 @@ package com.service;
 
 
 import com.ExceptionHandling.AppExceptions;
+import com.enums.ReportStatus;
 import com.repository.BaseRepository;
 import com.model.IncidentReport;
 import com.repository.IrRepository;
@@ -22,12 +23,15 @@ public class IncidentReportService extends BaseService{
     private UserService userService;
 
     public IncidentReport saveIncidentReport(IncidentReport report) {
-        validateUsersAndUpdate(report);
+        validateAndUpdate(report);
         IncidentReport incident = repository.saveOrUpdate(report);
         return incident;
     }
 
-    private void validateUsersAndUpdate(IncidentReport report) {
+    private void validateAndUpdate(IncidentReport report) {
+        if(report.getStatus()==null){
+            report.setStatus(ReportStatus.New);
+        }
         userService.validateAndGetUser(report.getAssignee());
         report.setCreatedBy(getLoggedInUser());
         report.setUpdatedBy(getLoggedInUser());
@@ -91,15 +95,22 @@ public class IncidentReportService extends BaseService{
        if(!creator && !assignee){
            throw new AppExceptions("Cannot update", "Only assignee/creator can update the Report");
        }
-        if(newIR.getStatus()!=null && oldIR.getStatus()!=null && !newIR.getStatus().equals(oldIR.getStatus())){
-            if(!assignee){
-                throw new AppExceptions("Cannot update", "Only assignee can update the Status of the Report");
-            }
-            oldIR.setStatus(newIR.getStatus());
-        }
-        if(StringUtils.isNotEmpty(newIR.getTitle())){
-            oldIR.setTitle(newIR.getTitle());
-        }
+       if(creator || assignee) {
+           if (newIR.getStatus() != null && oldIR.getStatus() != null && !newIR.getStatus().equals(oldIR.getStatus())) {
+               if (!assignee) {
+                   throw new AppExceptions("Cannot update", "Only assignee can update the Status of the Report");
+               }
+               oldIR.setStatus(newIR.getStatus());
+           }
+           if (StringUtils.isNotEmpty(newIR.getTitle())) {
+               oldIR.setTitle(newIR.getTitle());
+           }
+
+           if (StringUtils.isNotEmpty(newIR.getAssignee())) {
+               userService.validateAndGetUser(newIR.getAssignee());
+               oldIR.setTitle(newIR.getAssignee());
+           }
+       }
 
     }
 }

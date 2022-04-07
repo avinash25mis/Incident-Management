@@ -18,12 +18,12 @@ Navigate to the folder which contains pom
 
 run the following if you have maven in the System
 
-##  mvn clean install
-##  mvn spring-boot:run
+###  mvn clean install
+###  mvn spring-boot:run
 
 use mvnw (maven wrapper file ) if you do not have maven in the System
 
-##    mvnw spring-boot:run
+###    mvnw spring-boot:run
 
 By default applications will run at port 8082 and context path is /app
 
@@ -50,6 +50,9 @@ jdbc:h2:mem:app
 -------------------------
 http://localhost:8082/app/swagger-ui.html#/
 
+Since the application has authentication security we need jwt token to execute almost all api except few
+#### Once we get the token we can add the token on  right of the swagger ui "Authorize" button
+after token is added we can maintain a session from the swagger UI
 
 
 
